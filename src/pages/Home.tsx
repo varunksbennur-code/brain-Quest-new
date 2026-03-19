@@ -58,7 +58,7 @@ export default function Home() {
               className="mb-8"
             >
               <img
-                src="https://i.ibb.co/99mhDWFm/Image-Generator-2026-03-19-4.png"
+                src="https://i.ibb.co/SWd3fP3/logo.png"
                 alt="GM University Davanagere Logo"
                 className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-indigo-300 shadow-2xl bg-white p-2"
                 referrerPolicy="no-referrer"
@@ -109,7 +109,7 @@ export default function Home() {
             {/* University Logo */}
             <div className="text-center md:col-span-1">
               <img
-                src="https://i.ibb.co/99mhDWFm/Image-Generator-2026-03-19-4.png"
+                src="https://i.ibb.co/SWd3fP3/logo.png"
                 alt="GM University Davanagere Logo"
                 className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full border-4 border-indigo-300 shadow-lg bg-white p-2"
                 referrerPolicy="no-referrer"

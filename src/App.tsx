@@ -51,7 +51,7 @@ function Navbar() {
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-3">
               <img
-                src="https://i.ibb.co/99mhDWFm/Image-Generator-2026-03-19-4.png"
+                src="https://i.ibb.co/SWd3fP3/logo.png"
                 alt="GM University Logo"
                 className="w-10 h-10 rounded-lg border-2 border-indigo-200"
                 referrerPolicy="no-referrer"
