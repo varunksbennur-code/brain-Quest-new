@@ -20,6 +20,7 @@ export default function AdminDashboard() {
     debug: 0,
     optimization: 0
   });
+  const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -175,6 +176,8 @@ export default function AdminDashboard() {
       setDeleting(false);
     }
   };
+
+  const toggleRound = async (roundId: keyof GlobalSettings['rounds']) => {
     if (!globalSettings) return;
     try {
       const currentStatus = globalSettings.rounds[roundId].isActive;
