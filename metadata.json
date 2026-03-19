@@ -1,0 +1,5 @@
+{
+  "name": "Brain Quest",
+  "description": "A comprehensive competition platform for technical quizzes, logo identification, debugging, and optimization rounds with real-time leaderboard and admin management.",
+  "requestFramePermissions": []
+}

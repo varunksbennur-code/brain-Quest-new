@@ -1,0 +1,160 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: teams
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required, 1-50 chars)
+    //   - member1: string (required, 1-50 chars)
+    //   - member2: string (optional, 0-50 chars)
+    //   - scores: map (required)
+    //     - quiz: number (0-30)
+    //     - logo: number (0-20)
+    //     - debug: number (0-30)
+    //     - optimization: number (0-20)
+    //   - totalScore: number (sum of scores)
+    //   - createdAt: timestamp (required)
+    //
+    // Collection: logos
+    // Document ID: auto-generated
+    // Fields:
+    //   - imageUrl: string (required, valid URL)
+    //   - answer: string (required, 1-50 chars)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "varunksbennur@gmail.com" && request.auth.token.email_verified == true) ||
+          (request.auth.token.email == "gmu@admin.com"));
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidString(field, min, max) {
+      return request.resource.data[field] is string && 
+             request.resource.data[field].size() >= min && 
+             request.resource.data[field].size() <= max;
+    }
+
+    function isValidOptionalString(field, max) {
+      return ! (field in request.resource.data) || (request.resource.data[field] is string && request.resource.data[field].size() <= max);
+    }
+
+    function isValidScore(val, max) {
+      return val is number && val >= 0 && val <= max;
+    }
+
+    function isValidTeam(data) {
+      return hasRequiredFields(['name', 'email', 'member1', 'scores', 'totalScore', 'createdAt']) &&
+             hasOnlyAllowedFields(['name', 'email', 'member1', 'member2', 'scores', 'totalScore', 'createdAt', 'completedRounds']) &&
+             isValidString('name', 1, 50) &&
+             isValidString('email', 1, 100) &&
+             isValidString('member1', 1, 50) &&
+             isValidOptionalString('member2', 50) &&
+             data.scores is map &&
+             isValidScore(data.scores.quiz, 30) &&
+             isValidScore(data.scores.logo, 20) &&
+             isValidScore(data.scores.debug, 30) &&
+             isValidScore(data.scores.optimization, 20) &&
+             data.totalScore == data.scores.quiz + data.scores.logo + data.scores.debug + data.scores.optimization &&
+             data.createdAt is timestamp &&
+             (!('completedRounds' in data) || data.completedRounds is list);
+    }
+
+    function isValidLogo(data) {
+      return hasRequiredFields(['imageUrl', 'answer']) &&
+             hasOnlyAllowedFields(['imageUrl', 'answer']) &&
+             data.imageUrl is string &&
+             isValidString('answer', 1, 50);
+    }
+
+    function isValidCoordinator(data) {
+      return hasRequiredFields(['name', 'photoUrl', 'role']) &&
+             hasOnlyAllowedFields(['name', 'photoUrl', 'role']) &&
+             isValidString('name', 1, 50) &&
+             data.photoUrl is string &&
+             isValidString('role', 1, 50);
+    }
+
+    function isValidQuestion(data) {
+      return hasRequiredFields(['roundId', 'question', 'options', 'correctAnswer']) &&
+             hasOnlyAllowedFields(['roundId', 'question', 'options', 'correctAnswer', 'codeSnippet', 'imageUrl']) &&
+             isValidString('roundId', 1, 50) &&
+             isValidString('question', 1, 1000) &&
+             data.options is list &&
+             data.options.size() > 0 &&
+             isValidString('correctAnswer', 1, 500) &&
+             isValidOptionalString('codeSnippet', 5000) &&
+             isValidOptionalString('imageUrl', 2000);
+    }
+
+    function isValidSettings(data) {
+      return hasRequiredFields(['rounds']) &&
+             hasOnlyAllowedFields(['rounds']) &&
+             data.rounds is map;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow create, update: if isAdmin();
+    }
+
+    match /teams/{teamId} {
+      allow read: if true; // Public leaderboard
+      allow create: if isAuthenticated() && request.auth.uid == teamId && isValidTeam(request.resource.data);
+      allow update: if (isAdmin() || (isAuthenticated() && request.auth.uid == teamId)) && isValidTeam(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /logos/{logoId} {
+      allow read: if true; // Public quiz practice
+      allow create, update, delete: if isAdmin() && isValidLogo(request.resource.data);
+    }
+
+    match /coordinators/{coordinatorId} {
+      allow read: if true; // Publicly visible on website
+      allow create, update: if isAdmin() && isValidCoordinator(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /questions/{questionId} {
+      allow read: if true; // Needed for active rounds
+      allow create, update, delete: if isAdmin() && isValidQuestion(request.resource.data);
+    }
+
+    match /settings/{settingId} {
+      allow read: if true; // Needed to check if round is active
+      allow create, update: if isAdmin() && isValidSettings(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}
