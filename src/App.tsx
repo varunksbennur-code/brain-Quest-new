@@ -50,9 +50,12 @@ function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
-                <Trophy className="text-white w-6 h-6" />
-              </div>
+              <img
+                src="https://i.ibb.co/99mhDWFm/Image-Generator-2026-03-19-4.png"
+                alt="GM University Logo"
+                className="w-10 h-10 rounded-lg border-2 border-indigo-200"
+                referrerPolicy="no-referrer"
+              />
               <div className="hidden sm:block">
                 <p className="text-xs font-semibold text-indigo-600 leading-none">TECH CARNIVAL 2026</p>
                 <p className="text-sm font-bold tracking-tight leading-none">Brain Quest</p>

@@ -50,6 +50,21 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
+            {/* University Logo */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="mb-8"
+            >
+              <img
+                src="https://i.ibb.co/99mhDWFm/Image-Generator-2026-03-19-4.png"
+                alt="GM University Davanagere Logo"
+                className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-indigo-300 shadow-2xl bg-white p-2"
+                referrerPolicy="no-referrer"
+              />
+            </motion.div>
+
             <div className="mb-6">
               <p className="text-lg md:text-2xl font-semibold text-indigo-300 tracking-widest uppercase mb-2">GM University Davanagere</p>
               <p className="text-sm md:text-base text-gray-400">Faculty of Computing & IT Department</p>
@@ -90,7 +105,19 @@ export default function Home() {
       {/* University & Event Info Section */}
       <section className="max-w-7xl mx-auto px-4 mb-12">
         <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-3xl p-8 md:p-12 border border-indigo-200">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+            {/* University Logo */}
+            <div className="text-center md:col-span-1">
+              <img
+                src="https://i.ibb.co/99mhDWFm/Image-Generator-2026-03-19-4.png"
+                alt="GM University Davanagere Logo"
+                className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full border-4 border-indigo-300 shadow-lg bg-white p-2"
+                referrerPolicy="no-referrer"
+              />
+              <h4 className="text-lg font-bold text-indigo-900 mt-4">GM University Davanagere</h4>
+              <p className="text-sm text-gray-600">Faculty of Computing & IT</p>
+            </div>
+
             <div>
               <h3 className="text-2xl font-bold text-indigo-900 mb-4">About the Event</h3>
               <p className="text-gray-700 text-lg leading-relaxed">
