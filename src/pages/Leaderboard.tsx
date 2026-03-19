@@ -1,14 +1,28 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Trophy, Medal, Users, Star, Loader2, RefreshCw } from 'lucide-react';
+import { Trophy, Medal, Users, Star, Loader2, RefreshCw, Trash2, AlertTriangle } from 'lucide-react';
 import { Team } from '../types';
-import { db, collection, query, orderBy, onSnapshot } from '../firebase';
+import { db, collection, query, orderBy, onSnapshot, doc, deleteDoc, auth } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export default function Leaderboard() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
+    // Check admin status
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user && (user.email === 'varunksbennur@gmail.com' || user.email === 'gmu@admin.com' || user.email?.endsWith('@admin.com'))) {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    });
+
+    // Fetch teams
     const q = query(collection(db, 'teams'), orderBy('totalScore', 'desc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const teamsData = snapshot.docs.map(doc => ({
@@ -22,8 +36,27 @@ export default function Leaderboard() {
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeAuth();
+      unsubscribe();
+    };
   }, []);
+
+  const handleDeleteTeam = async (teamId: string, teamName: string) => {
+    if (!isAdmin) return;
+
+    setDeleting(true);
+    try {
+      await deleteDoc(doc(db, 'teams', teamId));
+      setDeleteConfirm(null);
+      // Teams will automatically update via onSnapshot
+    } catch (error) {
+      console.error('Error deleting team:', error);
+      alert('Failed to delete team. Please try again.');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   if (loading && teams.length === 0) {
     return (
@@ -117,6 +150,7 @@ export default function Leaderboard() {
                 <th className="px-6 py-6 text-xs font-bold uppercase tracking-widest text-gray-400 text-center">Debug</th>
                 <th className="px-6 py-6 text-xs font-bold uppercase tracking-widest text-gray-400 text-center">Opt</th>
                 <th className="px-8 py-6 text-xs font-bold uppercase tracking-widest text-gray-400 text-right">Total Score</th>
+                {isAdmin && <th className="px-6 py-6 text-xs font-bold uppercase tracking-widest text-gray-400 text-center">Actions</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-black/5">
@@ -149,11 +183,40 @@ export default function Leaderboard() {
                       {team.totalScore}
                     </div>
                   </td>
+                  {isAdmin && (
+                    <td className="px-6 py-6 text-center">
+                      {deleteConfirm === team._id ? (
+                        <div className="flex items-center justify-center space-x-2">
+                          <button
+                            onClick={() => handleDeleteTeam(team._id, team.name)}
+                            disabled={deleting}
+                            className="px-3 py-1 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 disabled:opacity-50"
+                          >
+                            {deleting ? 'Deleting...' : 'Confirm'}
+                          </button>
+                          <button
+                            onClick={() => setDeleteConfirm(null)}
+                            className="px-3 py-1 bg-gray-500 text-white text-xs font-bold rounded-lg hover:bg-gray-600"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => setDeleteConfirm(team._id)}
+                          className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete Team"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
+                    </td>
+                  )}
                 </tr>
               ))}
               {teams.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-8 py-20 text-center text-gray-400 italic">
+                  <td colSpan={isAdmin ? 8 : 7} className="px-8 py-20 text-center text-gray-400 italic">
                     No teams registered yet.
                   </td>
                 </tr>

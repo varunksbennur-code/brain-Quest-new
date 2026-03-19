@@ -20,7 +20,8 @@ export default function AdminDashboard() {
     debug: 0,
     optimization: 0
   });
-  const [saving, setSaving] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   
   // Round Settings State
@@ -160,7 +161,20 @@ export default function AdminDashboard() {
     }
   };
 
-  const toggleRound = async (roundId: keyof GlobalSettings['rounds']) => {
+  const handleDeleteTeam = async (teamId: string, teamName: string) => {
+    if (!window.confirm(`Are you sure you want to delete the team "${teamName}"? This action cannot be undone.`)) return;
+
+    setDeleting(true);
+    try {
+      await deleteDoc(doc(db, 'teams', teamId));
+      setDeleteConfirm(null);
+    } catch (err: any) {
+      console.error('Delete team error:', err);
+      alert('Failed to delete team');
+    } finally {
+      setDeleting(false);
+    }
+  };
     if (!globalSettings) return;
     try {
       const currentStatus = globalSettings.rounds[roundId].isActive;
@@ -396,13 +410,40 @@ export default function AdminDashboard() {
                           </button>
                         </div>
                       ) : (
-                        <button
-                          onClick={() => handleEdit(team)}
-                          className="p-3 bg-gray-100 text-gray-600 rounded-xl hover:bg-black hover:text-white transition-all"
-                          title="Edit Scores"
-                        >
-                          <Edit3 size={20} />
-                        </button>
+                        <div className="flex items-center justify-end space-x-2">
+                          <button
+                            onClick={() => handleEdit(team)}
+                            className="p-3 bg-gray-100 text-gray-600 rounded-xl hover:bg-black hover:text-white transition-all"
+                            title="Edit Scores"
+                          >
+                            <Edit3 size={20} />
+                          </button>
+                          {deleteConfirm === team._id ? (
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => handleDeleteTeam(team._id, team.name)}
+                                disabled={deleting}
+                                className="px-3 py-1 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 disabled:opacity-50"
+                              >
+                                {deleting ? 'Deleting...' : 'Confirm'}
+                              </button>
+                              <button
+                                onClick={() => setDeleteConfirm(null)}
+                                className="px-3 py-1 bg-gray-500 text-white text-xs font-bold rounded-lg hover:bg-gray-600"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => setDeleteConfirm(team._id)}
+                              className="p-3 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 transition-all"
+                              title="Delete Team"
+                            >
+                              <Trash2 size={20} />
+                            </button>
+                          )}
+                        </div>
                       )}
                     </td>
                   </tr>
