@@ -1,0 +1,105 @@
+{
+  "entities": {
+    "Team": {
+      "title": "Team",
+      "description": "A team participating in the competition",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "The name of the team" },
+        "email": { "type": "string", "format": "email", "description": "Team contact email" },
+        "member1": { "type": "string", "description": "Primary member name" },
+        "member2": { "type": "string", "description": "Secondary member name (optional)" },
+        "scores": {
+          "type": "object",
+          "properties": {
+            "quiz": { "type": "number", "description": "Score in the quiz round" },
+            "logo": { "type": "number", "description": "Score in the logo round" },
+            "debug": { "type": "number", "description": "Score in the debugging round" },
+            "optimization": { "type": "number", "description": "Score in the optimization round" }
+          }
+        },
+        "totalScore": { "type": "number", "description": "Calculated total score" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Registration timestamp" },
+        "completedRounds": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of round IDs that the team has completed"
+        }
+      },
+      "required": ["name", "email", "member1", "scores", "totalScore", "createdAt"]
+    },
+    "Logo": {
+      "title": "Logo",
+      "description": "A logo for the identification round",
+      "type": "object",
+      "properties": {
+        "imageUrl": { "type": "string", "description": "URL of the logo image" },
+        "answer": { "type": "string", "description": "Correct answer for the logo" }
+      },
+      "required": ["imageUrl", "answer"]
+    },
+    "Coordinator": {
+      "title": "Coordinator",
+      "description": "Event coordinator details",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the coordinator" },
+        "photoUrl": { "type": "string", "description": "URL of the coordinator's photo" },
+        "role": { "type": "string", "description": "Role or title of the coordinator" }
+      },
+      "required": ["name", "photoUrl", "role"]
+    },
+    "Question": {
+      "title": "Question",
+      "description": "A question for the quiz, debug, or optimization rounds",
+      "type": "object",
+      "properties": {
+        "roundId": { "type": "string", "description": "The round this question belongs to (quiz, debug, optimization)" },
+        "question": { "type": "string", "description": "The question text" },
+        "options": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of options for the question"
+        },
+        "correctAnswer": { "type": "string", "description": "The correct answer" },
+        "codeSnippet": { "type": "string", "description": "Optional code snippet for the question" },
+        "imageUrl": { "type": "string", "description": "Optional image URL for the question" }
+      },
+      "required": ["roundId", "question", "options", "correctAnswer"]
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "Global settings for the competition",
+      "type": "object",
+      "properties": {
+        "rounds": {
+          "type": "object",
+          "description": "Settings for each round"
+        }
+      },
+      "required": ["rounds"]
+    }
+  },
+  "firestore": {
+    "/teams/{teamId}": {
+      "schema": "Team",
+      "description": "Collection of participating teams"
+    },
+    "/logos/{logoId}": {
+      "schema": "Logo",
+      "description": "Collection of logos for the quiz"
+    },
+    "/coordinators/{coordinatorId}": {
+      "schema": "Coordinator",
+      "description": "Collection of event coordinators"
+    },
+    "/questions/{questionId}": {
+      "schema": "Question",
+      "description": "Collection of questions for the rounds"
+    },
+    "/settings/{settingId}": {
+      "schema": "Settings",
+      "description": "Collection of global settings"
+    }
+  }
+}
