@@ -93,19 +93,15 @@ export default function Register() {
     <div className="max-w-7xl mx-auto px-4 py-20">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
         <div className="space-y-8">
-          <div className="space-y-2">
-            <p className="text-sm font-bold text-indigo-600 tracking-widest uppercase">Tech Carnival 2026</p>
-            <p className="text-xs text-gray-500">GM University Davanagere - Faculty of Computing & IT</p>
-          </div>
           <div className="inline-flex items-center space-x-2 px-4 py-2 bg-indigo-50 text-indigo-600 rounded-full text-sm font-bold uppercase tracking-wider">
             <UserPlus size={16} />
-            <span>Join Brain Quest</span>
+            <span>Join the Quest</span>
           </div>
           <h1 className="text-5xl md:text-6xl font-black tracking-tight italic">
             Register Your Team
           </h1>
           <p className="text-xl text-gray-500 leading-relaxed max-w-lg">
-            Form a team of 1 or 2 members and compete in Brain Quest, one of the premier events at Tech Carnival 2026. Make sure your team name is unique and catchy!
+            Form a team of 1 or 2 members and compete for the title of Tech Carnival 2026 - Brain Quest Champion. Make sure your team name is unique and catchy!
           </p>
           
           <div className="space-y-6 pt-8">

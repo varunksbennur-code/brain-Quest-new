@@ -21,22 +21,11 @@ export default function AdminDashboard() {
     optimization: 0
   });
   const [saving, setSaving] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [deleting, setDeleting] = useState(false);
+  const [deletingTeamId, setDeletingTeamId] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   
   // Round Settings State
   const [globalSettings, setGlobalSettings] = useState<GlobalSettings | null>(null);
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [selectedRound, setSelectedRound] = useState<string>('quiz');
-  const [newQuestion, setNewQuestion] = useState<Partial<Question>>({
-    roundId: 'quiz',
-    question: '',
-    options: ['', '', '', ''],
-    correctAnswer: '',
-    codeSnippet: '',
-    imageUrl: ''
-  });
   
   const navigate = useNavigate();
 
@@ -83,24 +72,14 @@ export default function AdminDashboard() {
         // Initialize default settings
         const defaultSettings: GlobalSettings = {
           rounds: {
-            quiz: { isActive: false, duration: 600 },
-            logo: { isActive: false, duration: 300 },
-            debug: { isActive: false, duration: 900 },
-            optimization: { isActive: false, duration: 1200 }
+            quiz: { isActive: false, duration: 900 },
+            logo: { isActive: false, duration: 1800 },
+            debug: { isActive: false, duration: 1500 },
+            optimization: { isActive: false, duration: 1800 }
           }
         };
         setDoc(doc(db, 'settings', 'global'), defaultSettings);
       }
-    });
-
-    // Fetch Questions
-    const qQuestions = query(collection(db, 'questions'));
-    const unsubscribeQuestions = onSnapshot(qQuestions, (snapshot) => {
-      const questionsData = snapshot.docs.map(doc => ({
-        _id: doc.id,
-        ...doc.data()
-      })) as Question[];
-      setQuestions(questionsData);
     });
 
     // Hardcoded coordinators
@@ -128,7 +107,6 @@ export default function AdminDashboard() {
     return () => {
       unsubscribeTeams();
       unsubscribeSettings();
-      unsubscribeQuestions();
     };
   }, [isAdmin]);
 
@@ -162,18 +140,13 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleDeleteTeam = async (teamId: string, teamName: string) => {
-    if (!window.confirm(`Are you sure you want to delete the team "${teamName}"? This action cannot be undone.`)) return;
-
-    setDeleting(true);
+  const handleDeleteTeam = async (teamId: string) => {
     try {
       await deleteDoc(doc(db, 'teams', teamId));
-      setDeleteConfirm(null);
+      setDeletingTeamId(null);
     } catch (err: any) {
       console.error('Delete team error:', err);
       alert('Failed to delete team');
-    } finally {
-      setDeleting(false);
     }
   };
 
@@ -208,39 +181,6 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleAddQuestion = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newQuestion.question || !newQuestion.correctAnswer) return;
-    
-    try {
-      await addDoc(collection(db, 'questions'), {
-        ...newQuestion,
-        roundId: selectedRound
-      });
-      setNewQuestion({
-        roundId: selectedRound,
-        question: '',
-        options: ['', '', '', ''],
-        correctAnswer: '',
-        codeSnippet: '',
-        imageUrl: ''
-      });
-    } catch (err: any) {
-      console.error('Add question error:', err);
-      alert('Failed to add question');
-    }
-  };
-
-  const handleDeleteQuestion = async (questionId: string) => {
-    if (!window.confirm('Are you sure you want to delete this question?')) return;
-    try {
-      await deleteDoc(doc(db, 'questions', questionId));
-    } catch (err: any) {
-      console.error('Delete question error:', err);
-      alert('Failed to delete question');
-    }
-  };
-
   const filteredTeams = teams.filter(team => 
     team.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     team.member1.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -259,6 +199,7 @@ export default function AdminDashboard() {
     <div className="max-w-7xl mx-auto px-4 py-12 space-y-12">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
+          <div className="text-sm font-bold text-indigo-600 uppercase tracking-wider mb-1">Tech Carnival 2026 - Brain Quest</div>
           <h1 className="text-4xl font-black tracking-tight italic uppercase">Admin Dashboard</h1>
           <p className="text-gray-500 mt-1">Manage teams, scores, rounds, and event coordinators.</p>
         </div>
@@ -421,26 +362,25 @@ export default function AdminDashboard() {
                           >
                             <Edit3 size={20} />
                           </button>
-                          {deleteConfirm === team._id ? (
-                            <div className="flex items-center space-x-2">
+                          {deletingTeamId === team._id ? (
+                            <div className="flex items-center space-x-1 bg-red-50 p-1 rounded-xl border border-red-100">
                               <button
-                                onClick={() => handleDeleteTeam(team._id, team.name)}
-                                disabled={deleting}
-                                className="px-3 py-1 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 disabled:opacity-50"
+                                onClick={() => handleDeleteTeam(team._id)}
+                                className="px-3 py-2 bg-red-600 text-white text-sm font-bold rounded-lg hover:bg-red-700 transition-colors"
                               >
-                                {deleting ? 'Deleting...' : 'Confirm'}
+                                Confirm
                               </button>
                               <button
-                                onClick={() => setDeleteConfirm(null)}
-                                className="px-3 py-1 bg-gray-500 text-white text-xs font-bold rounded-lg hover:bg-gray-600"
+                                onClick={() => setDeletingTeamId(null)}
+                                className="px-3 py-2 bg-white text-gray-600 text-sm font-bold rounded-lg hover:bg-gray-100 transition-colors"
                               >
                                 Cancel
                               </button>
                             </div>
                           ) : (
                             <button
-                              onClick={() => setDeleteConfirm(team._id)}
-                              className="p-3 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 transition-all"
+                              onClick={() => setDeletingTeamId(team._id)}
+                              className="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all"
                               title="Delete Team"
                             >
                               <Trash2 size={20} />
@@ -505,151 +445,6 @@ export default function AdminDashboard() {
                 </div>
               );
             })}
-          </div>
-
-          <div className="bg-white rounded-[3rem] border border-black/5 shadow-sm p-8">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-bold">Manage Questions</h2>
-              <select
-                value={selectedRound}
-                onChange={(e) => setSelectedRound(e.target.value)}
-                className="px-4 py-2 border border-black/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold"
-              >
-                <option value="quiz">Quiz Round</option>
-                <option value="logo">Logo Round</option>
-                <option value="debug">Debug Round</option>
-                <option value="optimization">Optimization Round</option>
-              </select>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Add Question Form */}
-              <form onSubmit={handleAddQuestion} className="space-y-6">
-                <h3 className="text-lg font-bold border-b pb-2">Add New Question</h3>
-                
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Question Text</label>
-                  <textarea
-                    required
-                    value={newQuestion.question}
-                    onChange={(e) => setNewQuestion({...newQuestion, question: e.target.value})}
-                    className="w-full px-4 py-3 border border-black/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none min-h-[100px]"
-                    placeholder="Enter the question..."
-                  />
-                </div>
-
-                {(selectedRound === 'debug' || selectedRound === 'optimization') && (
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Code Snippet (Optional)</label>
-                    <textarea
-                      value={newQuestion.codeSnippet}
-                      onChange={(e) => setNewQuestion({...newQuestion, codeSnippet: e.target.value})}
-                      className="w-full px-4 py-3 border border-black/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-mono text-sm min-h-[150px]"
-                      placeholder="Enter code snippet here..."
-                    />
-                  </div>
-                )}
-
-                {selectedRound === 'logo' && (
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Image URL (Required for Logo Round)</label>
-                    <input
-                      required
-                      type="url"
-                      value={newQuestion.imageUrl || ''}
-                      onChange={(e) => setNewQuestion({...newQuestion, imageUrl: e.target.value})}
-                      className="w-full px-4 py-3 border border-black/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
-                      placeholder="https://example.com/logo.png"
-                    />
-                  </div>
-                )}
-
-                <div className="space-y-4">
-                  <label className="block text-sm font-bold text-gray-700">Options</label>
-                  {newQuestion.options?.map((opt, idx) => (
-                    <div key={idx} className="flex items-center space-x-4">
-                      <span className="font-bold text-gray-400 w-6">{String.fromCharCode(65 + idx)}.</span>
-                      <input
-                        required
-                        type="text"
-                        value={opt}
-                        onChange={(e) => {
-                          const newOpts = [...(newQuestion.options || [])];
-                          newOpts[idx] = e.target.value;
-                          setNewQuestion({...newQuestion, options: newOpts});
-                        }}
-                        className="flex-grow px-4 py-2 border border-black/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
-                        placeholder={`Option ${idx + 1}`}
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Correct Answer</label>
-                  <select
-                    required
-                    value={newQuestion.correctAnswer}
-                    onChange={(e) => setNewQuestion({...newQuestion, correctAnswer: e.target.value})}
-                    className="w-full px-4 py-3 border border-black/10 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
-                  >
-                    <option value="">Select correct option...</option>
-                    {newQuestion.options?.map((opt, idx) => (
-                      opt && <option key={idx} value={opt}>{String.fromCharCode(65 + idx)}: {opt}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-4 bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition-colors flex items-center justify-center space-x-2"
-                >
-                  <Plus size={20} />
-                  <span>Add Question</span>
-                </button>
-              </form>
-
-              {/* Questions List */}
-              <div className="space-y-6">
-                <h3 className="text-lg font-bold border-b pb-2">Existing Questions ({questions.filter(q => q.roundId === selectedRound).length})</h3>
-                <div className="space-y-4 max-h-[600px] overflow-y-auto pr-4">
-                  {questions.filter(q => q.roundId === selectedRound).map((q, idx) => (
-                    <div key={q._id} className="p-4 border border-black/10 rounded-2xl bg-gray-50 relative group">
-                      <button
-                        onClick={() => handleDeleteQuestion(q._id)}
-                        className="absolute top-4 right-4 p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
-                        title="Delete Question"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                      <div className="font-bold mb-2 pr-8">{idx + 1}. {q.question}</div>
-                      {q.imageUrl && (
-                        <div className="mb-3">
-                          <img src={q.imageUrl} alt="Question Image" className="h-20 object-contain rounded-lg border border-black/10" referrerPolicy="no-referrer" />
-                        </div>
-                      )}
-                      {q.codeSnippet && (
-                        <pre className="bg-gray-800 text-gray-100 p-3 rounded-xl text-xs overflow-x-auto mb-3">
-                          <code>{q.codeSnippet}</code>
-                        </pre>
-                      )}
-                      <div className="grid grid-cols-2 gap-2 text-sm">
-                        {q.options.map((opt, oIdx) => (
-                          <div key={oIdx} className={`p-2 rounded-lg ${opt === q.correctAnswer ? 'bg-emerald-100 text-emerald-800 font-bold' : 'bg-white border border-black/5 text-gray-600'}`}>
-                            {String.fromCharCode(65 + oIdx)}. {opt}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                  {questions.filter(q => q.roundId === selectedRound).length === 0 && (
-                    <div className="text-center py-12 text-gray-400 italic">
-                      No questions added for this round yet.
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       )}

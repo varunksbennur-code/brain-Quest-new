@@ -26,10 +26,46 @@ export default function Home() {
   ];
 
   const rounds = [
-    { name: "Technical Quiz", marks: 30, icon: Zap, color: "bg-amber-100 text-amber-600" },
-    { name: "Logo Identification", marks: 20, icon: Target, color: "bg-blue-100 text-blue-600" },
-    { name: "Debugging Round", marks: 30, icon: Code, color: "bg-emerald-100 text-emerald-600" },
-    { name: "Optimization Round", marks: 20, icon: Trophy, color: "bg-purple-100 text-purple-600" }
+    { 
+      name: "Technical Quiz", 
+      marks: 30, 
+      icon: Zap, 
+      color: "bg-amber-100 text-amber-600",
+      description: "Test your foundational knowledge in computer science, programming languages, and emerging technologies.",
+      rules: ["30 Multiple Choice Questions", "1 mark for each correct answer", "No negative marking", "Time limit: 15 minutes"]
+    },
+    { 
+      name: "Logo Identification", 
+      marks: 20, 
+      icon: Target, 
+      color: "bg-blue-100 text-blue-600",
+      description: "Identify popular tech company logos, programming language icons, and software tools.",
+      rules: ["10 Image-based Questions", "2 marks for each correct answer", "No negative marking", "Time limit: 30 minutes"]
+    },
+    { 
+      name: "Debugging Round", 
+      marks: 30, 
+      icon: Code, 
+      color: "bg-emerald-100 text-emerald-600",
+      description: "Find and fix bugs in provided code snippets across various programming languages.",
+      rules: ["15 Debugging Challenges", "2 marks for each correct fix", "No negative marking", "Time limit: 25 minutes"]
+    },
+    { 
+      name: "Optimization Round", 
+      marks: 20, 
+      icon: Trophy, 
+      color: "bg-purple-100 text-purple-600",
+      description: "Analyze code snippets and choose the most optimal solution or identify the time complexity.",
+      rules: ["10 Optimization Problems", "2 marks for each correct answer", "No negative marking", "Time limit: 30 minutes"]
+    }
+  ];
+
+  const schedule = [
+    { time: "09:00 AM - 10:00 AM", event: "Inauguration & Welcome Address", description: "Kickoff Tech Carnival 2026 at the Main Auditorium." },
+    { time: "10:00 AM", event: "Round 1: Technical Quiz", description: "15-minute simultaneous online quiz for all registered teams." },
+    { time: "10:45 AM", event: "Round 2: Logo Identification", description: "30-minute fast-paced visual recognition round." },
+    { time: "11:45 AM", event: "Round 3: Debugging Round", description: "25-minute code fixing challenges." },
+    { time: "12:45 PM", event: "Round 4: Optimization Round", description: "30-minute final showdown for the top teams." }
   ];
 
   return (
@@ -50,33 +86,24 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {/* University Logo */}
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="mb-8"
-            >
-              <img
-                src="https://i.ibb.co/SWd3fP3/logo.png"
-                alt="GM University Davanagere Logo"
-                className="w-32 h-32 md:w-40 md:h-40 mx-auto rounded-full border-4 border-indigo-300 shadow-2xl bg-white p-2"
-                referrerPolicy="no-referrer"
-              />
-            </motion.div>
-
-            <div className="mb-6">
-              <p className="text-lg md:text-2xl font-semibold text-indigo-300 tracking-widest uppercase mb-2">GM University Davanagere</p>
-              <p className="text-sm md:text-base text-gray-400">Faculty of Computing & IT Department</p>
+            <div className="mb-6 space-y-4 flex flex-col items-center">
+              <img src="https://i.ibb.co/zHsdg2Tg/logo.png" alt="GM University Logo" className="h-24 md:h-32 w-auto drop-shadow-2xl" referrerPolicy="no-referrer" />
+              <div className="space-y-2">
+                <h2 className="text-xl md:text-2xl font-bold text-indigo-400 tracking-widest uppercase">
+                  Tech Carnival 2026
+                </h2>
+                <p className="text-sm md:text-base text-gray-400 font-medium tracking-wide uppercase">
+                  Organized by Faculty of Computing and IT, GM University, Davanagere
+                  <br />
+                  <span className="text-indigo-300 font-bold mt-2 inline-block">Date: 27-03-2026</span>
+                </p>
+              </div>
             </div>
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter uppercase italic mb-4">
-              TECH CARNIVAL 2026
-            </h1>
-            <h2 className="text-3xl md:text-5xl font-bold text-indigo-300 mb-6">
+            <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase italic">
               Brain Quest
-            </h2>
-            <p className="text-xl md:text-2xl font-light text-gray-300 max-w-2xl mx-auto mt-4">
-              The ultimate technical showdown. Test your knowledge, speed, and precision in one of the most exciting competitions of Tech Carnival 2026.
+            </h1>
+            <p className="text-xl md:text-2xl font-light text-gray-300 max-w-2xl mx-auto mt-6">
+              The ultimate technical showdown. Test your knowledge, speed, and precision in the most awaited competition of the year.
             </p>
           </motion.div>
           
@@ -102,45 +129,60 @@ export default function Home() {
         </div>
       </section>
 
-      {/* University & Event Info Section */}
-      <section className="max-w-7xl mx-auto px-4 mb-12">
-        <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-3xl p-8 md:p-12 border border-indigo-200">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-            {/* University Logo */}
-            <div className="text-center md:col-span-1">
-              <img
-                src="https://i.ibb.co/SWd3fP3/logo.png"
-                alt="GM University Davanagere Logo"
-                className="w-24 h-24 md:w-32 md:h-32 mx-auto rounded-full border-4 border-indigo-300 shadow-lg bg-white p-2"
-                referrerPolicy="no-referrer"
-              />
-              <h4 className="text-lg font-bold text-indigo-900 mt-4">GM University Davanagere</h4>
-              <p className="text-sm text-gray-600">Faculty of Computing & IT</p>
+      {/* About Section */}
+      <section className="max-w-7xl mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="bg-indigo-600 text-white p-10 md:p-14 rounded-[3rem] shadow-sm relative overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 p-8 opacity-10">
+              <Zap size={120} />
             </div>
+            <div className="relative z-10">
+              <h2 className="text-sm font-bold tracking-widest uppercase text-indigo-200 mb-2">The Main Event</h2>
+              <h3 className="text-3xl md:text-4xl font-black italic uppercase mb-6">Tech Carnival 2026</h3>
+              <p className="text-indigo-100 leading-relaxed text-lg mb-6">
+                Organized by the Faculty of Computing and IT at GM University, Davanagere, Tech Carnival 2026 is the premier technical symposium of the year. 
+              </p>
+              <p className="text-indigo-100 leading-relaxed text-lg">
+                It brings together the brightest minds to showcase their skills, innovate, and compete across various technical domains. Join us for a celebration of technology, creativity, and excellence.
+              </p>
+            </div>
+          </motion.div>
 
-            <div>
-              <h3 className="text-2xl font-bold text-indigo-900 mb-4">About the Event</h3>
-              <p className="text-gray-700 text-lg leading-relaxed">
-                Tech Carnival 2026 is a premier technical event organized by the Faculty of Computing and Information Technology Department at GM University Davanagere. This annual celebration of technology brings together the brightest minds to compete, learn, and innovate.
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="bg-white border border-black/5 p-10 md:p-14 rounded-[3rem] shadow-sm relative overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 p-8 opacity-5">
+              <Trophy size={120} />
+            </div>
+            <div className="relative z-10">
+              <h2 className="text-sm font-bold tracking-widest uppercase text-gray-400 mb-2">The Flagship Competition</h2>
+              <h3 className="text-3xl md:text-4xl font-black italic uppercase mb-6">Brain Quest</h3>
+              <p className="text-gray-600 leading-relaxed text-lg mb-6">
+                As the flagship event of Tech Carnival 2026, Brain Quest is a multi-round technical showdown designed to push your limits.
+              </p>
+              <p className="text-gray-600 leading-relaxed text-lg">
+                Test your knowledge, speed, and precision through intense rounds of Technical Quizzes, Logo Identification, Debugging, and Code Optimization. Only the sharpest teams will emerge victorious.
               </p>
             </div>
-            <div>
-              <h3 className="text-2xl font-bold text-indigo-900 mb-4">Brain Quest</h3>
-              <p className="text-gray-700 text-lg leading-relaxed">
-                One of the flagship events of Tech Carnival, Brain Quest challenges participants across multiple technical domains including programming, debugging, optimization, and problem-solving. Compete with top talent and showcase your expertise.
-              </p>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Rounds Section */}
       <section className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tight">Brain Quest - Competition Rounds</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Competition Rounds</h2>
           <p className="text-gray-500 mt-2">Four challenging rounds to determine the ultimate champions.</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {rounds.map((round, idx) => (
             <motion.div
               key={round.name}
@@ -148,16 +190,75 @@ export default function Home() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
               viewport={{ once: true }}
-              className="bg-white p-8 rounded-3xl border border-black/5 shadow-sm hover:shadow-md transition-shadow"
+              className="bg-white p-8 rounded-3xl border border-black/5 shadow-sm hover:shadow-md transition-shadow flex flex-col h-full"
             >
-              <div className={`w-12 h-12 ${round.color} rounded-2xl flex items-center justify-center mb-6`}>
-                <round.icon size={24} />
+              <div className="flex items-start justify-between mb-4">
+                <div className={`w-12 h-12 ${round.color} rounded-2xl flex items-center justify-center`}>
+                  <round.icon size={24} />
+                </div>
+                <div className="text-right">
+                  <p className="text-gray-500 text-sm font-medium uppercase tracking-wider">Max Score</p>
+                  <div className="text-2xl font-black text-indigo-600">{round.marks}</div>
+                </div>
               </div>
-              <h3 className="text-xl font-bold mb-2">{round.name}</h3>
-              <p className="text-gray-500 text-sm mb-4">Maximum Score</p>
-              <div className="text-3xl font-black">{round.marks} Marks</div>
+              <h3 className="text-2xl font-bold mb-3">{round.name}</h3>
+              <p className="text-gray-600 mb-6 flex-grow">{round.description}</p>
+              
+              <div className="bg-gray-50 rounded-2xl p-5 border border-black/5">
+                <h4 className="text-sm font-bold uppercase tracking-wider text-gray-400 mb-3">Round Rules</h4>
+                <ul className="space-y-2">
+                  {round.rules.map((rule, i) => (
+                    <li key={i} className="flex items-start space-x-2 text-sm text-gray-600">
+                      <span className="text-indigo-500 mt-0.5">•</span>
+                      <span>{rule}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </motion.div>
           ))}
+        </div>
+      </section>
+
+      {/* Schedule Section */}
+      <section className="max-w-7xl mx-auto px-4">
+        <div className="bg-white rounded-[3rem] p-10 md:p-16 border border-black/5 shadow-sm">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold tracking-tight">Event Schedule</h2>
+            <p className="text-gray-500 mt-2">Timeline of events for Tech Carnival 2026 - Brain Quest.</p>
+          </div>
+          
+          <div className="max-w-3xl mx-auto relative">
+            {/* Vertical Line */}
+            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-indigo-100 transform md:-translate-x-1/2"></div>
+            
+            <div className="space-y-8">
+              {schedule.map((item, idx) => (
+                <motion.div 
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  viewport={{ once: true }}
+                  className={`relative flex flex-col md:flex-row items-start md:items-center ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''}`}
+                >
+                  {/* Timeline Dot */}
+                  <div className="absolute left-4 md:left-1/2 w-3 h-3 bg-indigo-600 rounded-full transform -translate-x-1.5 md:-translate-x-1.5 mt-1.5 md:mt-0 shadow-[0_0_0_4px_white]"></div>
+                  
+                  {/* Content Box */}
+                  <div className={`ml-12 md:ml-0 md:w-1/2 ${idx % 2 === 0 ? 'md:pl-12' : 'md:pr-12 text-left md:text-right'}`}>
+                    <div className="bg-gray-50 p-6 rounded-2xl border border-black/5 hover:border-indigo-100 transition-colors">
+                      <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full mb-3">
+                        {item.time}
+                      </span>
+                      <h4 className="text-lg font-bold mb-2">{item.event}</h4>
+                      <p className="text-gray-600 text-sm">{item.description}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -194,18 +295,17 @@ export default function Home() {
 
       {/* CTA */}
       <section className="max-w-7xl mx-auto px-4 text-center">
-        <div className="bg-gradient-to-r from-indigo-600 to-blue-600 rounded-[3rem] p-16 text-white">
-          <h2 className="text-4xl font-bold mb-3">Ready to take the challenge?</h2>
-          <p className="text-lg font-semibold text-indigo-200 mb-6">Tech Carnival 2026 - Brain Quest</p>
+        <div className="bg-indigo-600 rounded-[3rem] p-16 text-white">
+          <h2 className="text-4xl font-bold mb-6">Ready to take the challenge?</h2>
           <p className="text-indigo-100 mb-10 max-w-xl mx-auto">
-            Registration is open for a limited time. Form your team and secure your spot in Brain Quest, one of the premier events at Tech Carnival 2026 organized by GM University Davanagere.
+            Registration is open for a limited time. Form your team and secure your spot in Tech Carnival 2026 - Brain Quest.
           </p>
           <Link 
             to="/register" 
-            className="inline-flex items-center space-x-2 px-10 py-5 bg-white text-indigo-600 font-bold rounded-full hover:bg-indigo-50 transition-all transform hover:scale-105"
+            className="inline-flex items-center space-x-2 px-10 py-5 bg-white text-indigo-600 font-bold rounded-full hover:bg-indigo-50 transition-all"
           >
             <Users size={20} />
-            <span>Register Your Team</span>
+            <span>Register Now</span>
           </Link>
         </div>
       </section>

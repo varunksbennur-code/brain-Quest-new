@@ -50,18 +50,13 @@ function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-3">
-              <img
-                src="https://i.ibb.co/SWd3fP3/logo.png"
-                alt="GM University Logo"
-                className="w-10 h-10 rounded-lg border-2 border-indigo-200"
-                referrerPolicy="no-referrer"
-              />
-              <div className="hidden sm:block">
-                <p className="text-xs font-semibold text-indigo-600 leading-none">TECH CARNIVAL 2026</p>
-                <p className="text-sm font-bold tracking-tight leading-none">Brain Quest</p>
+              <img src="https://i.ibb.co/zHsdg2Tg/logo.png" alt="GM University Logo" className="h-10 w-auto" referrerPolicy="no-referrer" />
+              <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
+                <Trophy className="text-white w-6 h-6" />
               </div>
-              <div className="sm:hidden">
-                <span className="text-lg font-bold tracking-tight">Brain Quest</span>
+              <div className="flex flex-col">
+                <span className="text-xl font-bold tracking-tight leading-tight">Brain Quest</span>
+                <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider leading-tight">Tech Carnival 2026</span>
               </div>
             </Link>
           </div>
@@ -250,8 +245,13 @@ export default function App() {
           </Routes>
         </main>
         <footer className="bg-white border-t border-black/5 py-8">
-          <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
-            <p>&copy; 2026 Brain Quest Competition. All rights reserved.</p>
+          <div className="max-w-7xl mx-auto px-4 flex flex-col items-center text-center text-gray-500 text-sm space-y-4">
+            <img src="https://i.ibb.co/zHsdg2Tg/logo.png" alt="GM University Logo" className="h-16 w-auto mb-2 opacity-80 hover:opacity-100 transition-opacity" referrerPolicy="no-referrer" />
+            <div className="space-y-2">
+              <p className="font-bold text-gray-800 uppercase tracking-wider text-xs">Tech Carnival 2026</p>
+              <p>Organized by Faculty of Computing and IT, GM University, Davanagere</p>
+              <p className="pt-4">&copy; 2026 Brain Quest Competition. All rights reserved.</p>
+            </div>
           </div>
         </footer>
       </div>

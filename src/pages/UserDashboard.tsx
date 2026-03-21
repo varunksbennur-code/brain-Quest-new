@@ -159,7 +159,7 @@ export default function UserDashboard() {
     <div className="max-w-7xl mx-auto px-4 py-12 space-y-12">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <p className="text-sm font-bold text-indigo-600 tracking-widest uppercase mb-2">Tech Carnival 2026 - Brain Quest | GM University Davanagere</p>
+          <div className="text-sm font-bold text-indigo-600 uppercase tracking-wider mb-1">Tech Carnival 2026 - Brain Quest</div>
           <h1 className="text-4xl font-black tracking-tight italic uppercase">Welcome, {team.name}</h1>
           <p className="text-gray-500 mt-1">Total Score: <span className="font-bold text-black">{team.totalScore}</span> / 100</p>
         </div>

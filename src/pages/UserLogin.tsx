@@ -46,9 +46,8 @@ export default function UserLogin() {
           <div className="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
             <User size={32} />
           </div>
-          <p className="text-xs font-bold text-indigo-600 tracking-widest uppercase mb-2">Tech Carnival 2026</p>
-          <h1 className="text-3xl font-black tracking-tight italic uppercase">Brain Quest - Team Login</h1>
-          <p className="text-gray-500 mt-2">Sign in to access your dashboard and compete in the rounds.</p>
+          <h1 className="text-3xl font-black tracking-tight italic uppercase">Team Login</h1>
+          <p className="text-gray-500 mt-2">Sign in to access your Tech Carnival 2026 - Brain Quest dashboard.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

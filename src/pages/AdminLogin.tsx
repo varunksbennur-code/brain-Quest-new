@@ -62,7 +62,7 @@ export default function AdminLogin() {
             <Shield size={32} />
           </div>
           <h1 className="text-3xl font-black tracking-tight italic uppercase">Admin Access</h1>
-          <p className="text-gray-500 mt-2">Sign in to manage the competition.</p>
+          <p className="text-gray-500 mt-2">Sign in to manage Tech Carnival 2026 - Brain Quest.</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
